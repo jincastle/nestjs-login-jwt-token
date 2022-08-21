@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
-  //swagger보안 미들웨어
+
   app.use(
     ['/api', 'api-json'],
     expressBasicAuth({
@@ -22,13 +22,12 @@ async function bootstrap() {
     .setTitle('C.I.C')
     .setDescription('cat')
     .setVersion('1.0.0')
-    // .addTag('cats')
     .build();
   const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
   app.enableCors({
-    origin: true, //개발할때문 true 배포할때 url로 변경
+    origin: true,
     credentials: true,
   });
   await app.listen(3000);
