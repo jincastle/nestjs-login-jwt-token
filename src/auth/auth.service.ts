@@ -1,21 +1,20 @@
+import { UsersService } from './../users/users.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UsersRepository } from 'src/users/users.repository';
 import { LoginRequestDto } from './dto/login.request.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersRepository: UsersRepository,
+    private readonly usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
   async jwtLogIn(data: LoginRequestDto) {
     const { email, password } = data;
 
-    const user = await this.usersRepository.findUserByEmail(email);
-    console.log(user);
+    const user = await this.usersService.findUserByEmail(email);
 
     if (!user) {
       throw new UnauthorizedException('이메일을 확인해 주세요');
