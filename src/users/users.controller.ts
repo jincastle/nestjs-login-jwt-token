@@ -33,7 +33,7 @@ export class UsersController {
   @ApiOperation({ summary: '로그인' })
   @Post('login')
   logIn(@Body() data: LoginRequestDto) {
-    console.log(data);
+    // console.log(data);
     return this.authService.jwtLogIn(data);
   }
 }

@@ -13,20 +13,19 @@ export class UsersService {
   ) {}
   async signUp(body: UserRequestDto) {
     const { email, name, password } = body;
-    const isUserExist = (await this.usersRepository.findOne({
+    const isUserExist = await this.usersRepository.findOne({
       where: {
         email: email,
       },
-    }))
-      ? true
-      : false;
+    });
+    console.log(isUserExist);
     if (isUserExist) {
       throw new UnauthorizedException('이미 가입한 이메일 입니다');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await this.usersRepository.create({
+    const user = await this.usersRepository.save({
       email,
       name,
       password: hashedPassword,
