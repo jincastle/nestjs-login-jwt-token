@@ -17,6 +17,8 @@ import { SuccessInterceptor } from 'src/common/success.intercetor';
 import { SubUsersDto } from './dto/subusers.dto';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { CurrentUser } from 'src/common/users.decorator';
+import { User } from 'src/users/users.entity';
 
 @Controller('subusers')
 @UseInterceptors(SuccessInterceptor)
@@ -26,25 +28,30 @@ export class SubusersController {
 
   @ApiOperation({ summary: '서브아이디 조회' })
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('token')
+  @ApiBearerAuth('jwt')
   @Get()
-  subuserFind(@Req() req) {
-    return this.subUserService.findsubuser(req.user);
+  async subuserFind(@CurrentUser() user: User) {
+    return await this.subUserService.findsubuser(user);
   }
 
   @ApiOperation({ summary: '서브아이디 생성' })
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('token')
+  @ApiBearerAuth('jwt')
   @Post()
-  create(@Body() subUsersDto: SubUsersDto) {
-    return this.subUserService.subusercreate(subUsersDto);
+  async subuserscreate(
+    @Body() body: SubUsersDto,
+    @CurrentUser() user: User,
+    @Req() request,
+  ) {
+    console.log(body);
+    return await this.subUserService.subusercreate(body, user);
   }
 
   @ApiOperation({ summary: '서브아이디 삭제' })
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('token')
+  @ApiBearerAuth('jwt')
   @Delete(':id')
-  delete(@Param('id') subuserId: number) {
-    return this.subUserService.subuserdelete(subuserId);
+  async delete(@Param('id') subuserId: number) {
+    return await this.subUserService.subuserdelete(subuserId);
   }
 }

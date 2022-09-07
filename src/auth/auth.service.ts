@@ -15,7 +15,6 @@ export class AuthService {
     const { email, password } = data;
 
     const user = await this.usersService.findUserByEmail(email);
-    console.log('왜 안나와' + user);
 
     if (!user) {
       throw new UnauthorizedException('이메일을 확인해 주세요');

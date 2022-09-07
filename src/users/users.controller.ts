@@ -26,14 +26,11 @@ export class UsersController {
   @ApiOperation({ summary: '회원가입' })
   @Post('signup')
   async signUp(@Body() body: UserRequestDto, @Req() request) {
-    console.log(body);
-    console.log(request.query);
     return await this.usersService.signUp(body);
   }
   @ApiOperation({ summary: '로그인' })
   @Post('login')
   logIn(@Body() data: LoginRequestDto) {
-    // console.log(data);
     return this.authService.jwtLogIn(data);
   }
 }

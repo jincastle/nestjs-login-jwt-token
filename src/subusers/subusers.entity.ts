@@ -15,7 +15,6 @@ export class SubUser {
   @Column('varchar', { length: 32 })
   name: string;
 
-  @ManyToOne(() => User, (user) => user.subuserId)
-  @JoinColumn({ name: 'userId' })
+  @ManyToOne(() => User, (user) => user.subuser)
   user: User;
 }

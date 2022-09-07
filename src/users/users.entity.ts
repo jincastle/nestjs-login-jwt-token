@@ -19,5 +19,5 @@ export class User {
   isActive: boolean;
 
   @OneToMany(() => SubUser, (subuser) => subuser.user)
-  subuserId: SubUser[];
+  subuser: SubUser[];
 }

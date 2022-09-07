@@ -1,28 +1,36 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { User } from 'src/users/users.entity';
 import { Repository } from 'typeorm';
 import { SubUsersDto } from './dto/subusers.dto';
 import { SubUser } from './subusers.entity';
 
 @Injectable()
-@UseGuards(JwtAuthGuard)
 export class SubusersService {
   constructor(
     @InjectRepository(SubUser)
     private subUsersRepository: Repository<SubUser>,
   ) {}
 
-  async subusercreate(subuser: SubUsersDto): Promise<SubUser> {
-    return await this.subUsersRepository.save(subuser);
+  async findsubuser(user: User): Promise<any> {
+    return this.subUsersRepository.find({ where: { user: user } });
   }
 
-  async findsubuser(user: User): Promise<any> {
-    return await this.subUsersRepository.find({ where: { user: user } });
+  async subusercreate(body: SubUsersDto, user: User): Promise<SubUser> {
+    const { name } = body;
+    console.log(name);
+    if (name) {
+      throw new UnauthorizedException('이름을 입력해 주세요');
+    }
+    const subuser = await this.subUsersRepository.save({ name: name, user });
+
+    return subuser;
   }
 
   async subuserdelete(subuserId: number) {
-    return await this.subUsersRepository.findOne({ where: { id: subuserId } });
+    const subuser = await this.subUsersRepository.findOne({
+      where: { id: subuserId },
+    });
+    return this.subUsersRepository.remove(subuser);
   }
 }
